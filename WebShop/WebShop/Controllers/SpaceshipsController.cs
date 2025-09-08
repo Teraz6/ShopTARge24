@@ -31,5 +31,13 @@ namespace WebShop.Controllers
 
             return View(result);
         }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            SpaceshipCreateViewModel result = new();
+
+            return View("Create", result);
+        }
     }
 }
