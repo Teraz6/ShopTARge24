@@ -39,5 +39,11 @@ namespace WebShop.Controllers
 
             return View("Create", result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create()
+        {
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
