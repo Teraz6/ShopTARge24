@@ -4,10 +4,6 @@ using WebShop.Core.Dto;
 using WebShop.Core.ServiceInterface;
 using WebShop.Data;
 using WebShop.Models.Spaceships;
-using WebShop.Core.Dto;
-using WebShop.Core.ServiceInterface;
-using WebShop.Models.Spaceships;
-
 
 namespace WebShop.Controllers
 {

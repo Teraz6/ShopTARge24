@@ -8,6 +8,6 @@ namespace WebShop.Core.ServiceInterface
         Task<Spaceships> Create(SpaceshipDto dto);
         Task<Spaceships> DetailAsync(Guid id);
         Task<Spaceships> Delete(Guid id);
-        Task<Spaceships> Update(Guid id);
+        Task<Spaceships> Update(SpaceshipDto dto);
     }
 }

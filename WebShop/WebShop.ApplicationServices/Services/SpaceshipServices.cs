@@ -3,9 +3,6 @@ using WebShop.Core.Domain;
 using WebShop.Core.Dto;
 using WebShop.Core.ServiceInterface;
 using WebShop.Data;
-using WebShop.Core.Domain;
-using WebShop.Core.Dto;
-using WebShop.Core.ServiceInterface;
 
 
 namespace WebShop.ApplicationServices.Services
