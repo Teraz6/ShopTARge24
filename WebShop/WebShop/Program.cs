@@ -13,6 +13,9 @@ builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
 builder.Services.AddDbContext<WebShopContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddDbContext<KindergardenDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("KindergardenConnection")));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
