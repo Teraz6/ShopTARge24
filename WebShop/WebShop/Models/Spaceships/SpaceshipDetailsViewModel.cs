@@ -1,6 +1,6 @@
-﻿namespace WebShop.Core.Dto
+﻿namespace WebShop.Models.Spaceships
 {
-    public class SpaceshipDto
+    public class SpaceshipDetailsViewModel
     {
         public Guid? Id { get; set; }
         public string? Name { get; set; }
