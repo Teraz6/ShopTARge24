@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using WebShop.Core.Domain;
 
 namespace WebShop.Data
 {
