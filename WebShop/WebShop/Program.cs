@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebShop.Core.ServiceInterface;
 using WebShop.Data;
 using WebShop.ApplicationServices.Services;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,14 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.UseStaticFiles(new StaticFileOptions
+
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "multipleFileUpload")),
+    RequestPath = "/multipleFileUpload"
+});
 
 app.MapControllerRoute(
     name: "default",
