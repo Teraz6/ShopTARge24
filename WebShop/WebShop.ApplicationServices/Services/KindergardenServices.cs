@@ -54,17 +54,12 @@ namespace WebShop.ApplicationServices.Services
 
         public async Task<Kindergarden> Delete(Guid id)
         {
-            var kindergarden = await _context.Kindergardens.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (kindergarden == null)
-            {
-                return null;
-            }
-
-            _context.Kindergardens.Remove(kindergarden);
+            var result = await _context.Kindergardens
+                  .FirstOrDefaultAsync(x => x.Id == id);
+            _context.Kindergardens.Remove(result);
             await _context.SaveChangesAsync();
 
-            return kindergarden;
+            return result;
         }
 
         public async Task<Kindergarden> DetailAsync(Guid id)

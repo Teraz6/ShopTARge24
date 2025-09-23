@@ -10,11 +10,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
 
+builder.Services.AddScoped<IKindergardenServices, KindergardenServices>();
+
 builder.Services.AddDbContext<WebShopContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddDbContext<KindergardenDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("KindergardenConnection")));
 
 var app = builder.Build();
 

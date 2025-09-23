@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WebShop.Data.Migrations.KindergardenDb
+namespace WebShop.Data.Migrations
 {
     /// <inheritdoc />
     public partial class kindergarden : Migration
@@ -11,6 +11,19 @@ namespace WebShop.Data.Migrations.KindergardenDb
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "FileToApis",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExistingFilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpaceshipId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileToApis", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Kindergardens",
                 columns: table => new
@@ -32,6 +45,9 @@ namespace WebShop.Data.Migrations.KindergardenDb
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "FileToApis");
+
             migrationBuilder.DropTable(
                 name: "Kindergardens");
         }

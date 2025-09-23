@@ -9,10 +9,10 @@ using WebShop.Data;
 
 #nullable disable
 
-namespace WebShop.Data.Migrations.KindergardenDb
+namespace WebShop.Data.Migrations
 {
-    [DbContext(typeof(KindergardenDbContext))]
-    [Migration("20250923074811_kindergarden")]
+    [DbContext(typeof(WebShopContext))]
+    [Migration("20250923085101_kindergarden")]
     partial class kindergarden
     {
         /// <inheritdoc />
@@ -24,6 +24,23 @@ namespace WebShop.Data.Migrations.KindergardenDb
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("WebShop.Core.Domain.FileToApi", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExistingFilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SpaceshipId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileToApis");
+                });
 
             modelBuilder.Entity("WebShop.Core.Domain.Kindergarden", b =>
                 {
@@ -52,6 +69,38 @@ namespace WebShop.Data.Migrations.KindergardenDb
                     b.HasKey("Id");
 
                     b.ToTable("Kindergardens");
+                });
+
+            modelBuilder.Entity("WebShop.Core.Domain.Spaceships", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("BuiltDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Classification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Crew")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EnginePower")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Spaceships");
                 });
 #pragma warning restore 612, 618
         }
