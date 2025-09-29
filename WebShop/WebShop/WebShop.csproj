@@ -21,7 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="multipleFileUpload\" />
+    <Folder Include="wwwroot\multipleFileUpload\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\multipleFileUpload\2ec7bb78-ff5e-4031-9b4a-82800b5e0d7a_Leonidas.webp" />
+    <None Include="wwwroot\multipleFileUpload\96c9aa8a-a62c-4ddf-b146-a2ceebe24313_ScipioAfricanus.jpg" />
   </ItemGroup>
 
 </Project>
