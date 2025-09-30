@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace ShopTARge24.Core.Dto
+﻿namespace ShopTARge24.Models.RealEstate
 {
-    public class RealEstateDto
+    public class RealEstateCreateUpdateViewModel
     {
         public Guid? Id { get; set; }
         public double? Area { get; set; }
@@ -11,8 +9,8 @@ namespace ShopTARge24.Core.Dto
         public string? BuildingType { get; set; }
 
         public List<IFormFile> Files { get; set; }
-        public IEnumerable<FileToApiDto> FileToApiDtos { get; set; }
-            = new List<FileToApiDto>();
+        public List<ImageViewModel> Image { get; set; }
+            = new List<ImageViewModel>();
 
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
