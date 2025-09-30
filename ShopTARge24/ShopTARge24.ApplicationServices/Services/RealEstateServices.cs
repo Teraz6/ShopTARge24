@@ -9,16 +9,13 @@ namespace ShopTARge24.ApplicationServices.Services
     public class RealEstateServices : IRealEstateServices
     {
         private readonly ShopTARge24Context _context;
-        private readonly IFileServices _fileServices;
 
         public RealEstateServices
             (
-            ShopTARge24Context context,
-            IFileServices fileServices
+            ShopTARge24Context context
             )
         {
             _context = context;
-            _fileServices = fileServices;
         }
 
         public async Task<RealEstate> Create(RealEstateDto dto)
@@ -32,7 +29,6 @@ namespace ShopTARge24.ApplicationServices.Services
             realEstate.BuildingType = dto.BuildingType;
             realEstate.CreatedAt = DateTime.Now;
             realEstate.ModifiedAt = DateTime.Now;
-            _fileServices.FilesToApi(dto, realEstate);
 
             await _context.RealEstates.AddAsync(realEstate);
             await _context.SaveChangesAsync();
@@ -51,7 +47,6 @@ namespace ShopTARge24.ApplicationServices.Services
             realEstate.BuildingType= dto.BuildingType;
             realEstate.CreatedAt = dto.CreatedAt;
             realEstate.ModifiedAt = DateTime.Now;
-            _fileServices.FilesToApi(dto, realEstate);
 
             _context.RealEstates.Update(realEstate);
             await _context.SaveChangesAsync();
@@ -73,16 +68,6 @@ namespace ShopTARge24.ApplicationServices.Services
             var result = await _context.RealEstates
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            var images = await _context.FileToApis
-                .Where(x => x.RealEstateId == id)
-                .Select(y => new FileToApiDto
-                {
-                    Id = y.Id,
-                    RealEstateId = y.RealEstateId,
-                    ExistingFilePath = y.ExistingFilePath,
-                }).ToArrayAsync();
-
-            await _fileServices.RemoveImageFromApi(images);
             _context.RealEstates.Remove(result);
             await _context.SaveChangesAsync();
 
