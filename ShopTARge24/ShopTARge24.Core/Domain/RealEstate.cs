@@ -16,5 +16,7 @@ namespace ShopTARge24.Core.Domain
 
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set;}
+
+        public List<FileToDatabase> Files { get; set; } = new();
     }
 }

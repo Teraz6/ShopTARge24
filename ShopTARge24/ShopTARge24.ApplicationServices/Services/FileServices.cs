@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.IO.Enumeration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using ShopTARge24.Core.Domain;
 using ShopTARge24.Core.Dto;
@@ -100,7 +101,30 @@ namespace ShopTARge24.ApplicationServices.Services
 
         public void UploadFilesToDatabase(RealEstateDto dto, RealEstate domain)
         {
+            //toimub kontroll, kas on vähemalt üks fail või mitu
+            if (dto.Files != null && dto.Files.Count > 0)
+            {
+                return;
+            }
 
+            //tuleb kasutada foreachi, et mitu faili üles laadida
+            foreach (var file in dto.Files)
+            {
+                using (var target = new MemoryStream())
+                {
+                    FileToDatabase files = new FileToDatabase()
+                    {
+                        Id = Guid.NewGuid(),
+                        ImageTitle = file.FileName,
+                        RealEstateId = domain.Id,
+                    };
+
+                    file.CopyTo(target);
+                    files.ImageData = target.ToArray();
+
+                    _context.FileToDatabases.Add(files);
+                }
+            }
         }
     }
 }
