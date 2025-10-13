@@ -1,5 +1,4 @@
-﻿using System.IO.Enumeration;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using ShopTARge24.Core.Domain;
 using ShopTARge24.Core.Dto;
@@ -101,28 +100,27 @@ namespace ShopTARge24.ApplicationServices.Services
 
         public void UploadFilesToDatabase(RealEstateDto dto, RealEstate domain)
         {
-            //toimub kontroll, kas on vähemalt üks fail või mitu
-            if (dto.Files != null && dto.Files.Count > 0)
+            //toimub kontroll, kas on v'hemalt [ks fail v]i mitu
+            if(dto.Files != null && dto.Files.Count > 0)
             {
-                return;
-            }
-
-            //tuleb kasutada foreachi, et mitu faili üles laadida
-            foreach (var file in dto.Files)
-            {
-                using (var target = new MemoryStream())
+                //tuleb kasutada foreachi et mitu faili [lesse laadida
+                foreach (var file in dto.Files)
                 {
-                    FileToDatabase files = new FileToDatabase()
+                    //foreachi sees tuleb kasutada using-t
+                    using (var target = new MemoryStream())
                     {
-                        Id = Guid.NewGuid(),
-                        ImageTitle = file.FileName,
-                        RealEstateId = domain.Id,
-                    };
+                        FileToDatabase files = new FileToDatabase()
+                        {
+                            Id = Guid.NewGuid(),
+                            ImageTitle = file.FileName,
+                            RealEstateId = domain.Id
+                        };
 
-                    file.CopyTo(target);
-                    files.ImageData = target.ToArray();
+                        file.CopyTo(target);
+                        files.ImageData = target.ToArray();
 
-                    _context.FileToDatabases.Add(files);
+                        _context.FileToDatabases.Add(files);
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ using ShopTARge24.Core.Dto;
 using ShopTARge24.Core.ServiceInterface;
 using ShopTARge24.Data;
 
+
 namespace ShopTARge24.ApplicationServices.Services
 {
     public class RealEstateServices : IRealEstateServices
@@ -13,8 +14,8 @@ namespace ShopTARge24.ApplicationServices.Services
 
         public RealEstateServices
             (
-            ShopTARge24Context context,
-            IFileServices fileServices
+                ShopTARge24Context context,
+                IFileServices fileServices
             )
         {
             _context = context;
@@ -23,44 +24,43 @@ namespace ShopTARge24.ApplicationServices.Services
 
         public async Task<RealEstate> Create(RealEstateDto dto)
         {
-            RealEstate realEstate = new RealEstate();
+            RealEstate domain = new RealEstate();
 
-            realEstate.Id = Guid.NewGuid();
-            realEstate.Area = dto.Area;
-            realEstate.Location = dto.Location;
-            realEstate.RoomNumber = dto.RoomNumber;
-            realEstate.BuildingType = dto.BuildingType;
-            realEstate.CreatedAt = DateTime.Now;
-            realEstate.ModifiedAt = DateTime.Now;
+            domain.Id = Guid.NewGuid();
+            domain.Area = dto.Area;
+            domain.Location = dto.Location;
+            domain.RoomNumber = dto.RoomNumber;
+            domain.BuildingType = dto.BuildingType;
+            domain.CreatedAt = DateTime.Now;
+            domain.ModifiedAt = DateTime.Now;
 
             if (dto.Files != null)
             {
-                _fileServices.UploadFilesToDatabase(dto, realEstate);
+                _fileServices.UploadFilesToDatabase(dto, domain);
             }
 
-            await _context.RealEstates.AddAsync(realEstate);
+            await _context.RealEstates.AddAsync(domain);
             await _context.SaveChangesAsync();
 
-            return realEstate;
+            return domain;
         }
 
         public async Task<RealEstate> Update(RealEstateDto dto)
         {
-            RealEstate realEstate = new RealEstate();
+            RealEstate domain = new RealEstate();
 
-            realEstate.Id = dto.Id;
-            realEstate.Area = dto.Area;
-            realEstate.Location = dto.Location;
-            realEstate.RoomNumber = dto.RoomNumber;
-            realEstate.BuildingType= dto.BuildingType;
-            realEstate.CreatedAt = dto.CreatedAt;
-            realEstate.ModifiedAt = DateTime.Now;
+            domain.Id = dto.Id;
+            domain.Area = dto.Area;
+            domain.Location = dto.Location;
+            domain.RoomNumber = dto.RoomNumber;
+            domain.BuildingType = dto.BuildingType;
+            domain.CreatedAt = DateTime.Now;
+            domain.ModifiedAt = DateTime.Now;
 
-            _context.RealEstates.Update(realEstate);
+            _context.RealEstates.Update(domain);
             await _context.SaveChangesAsync();
 
-            return realEstate;
-
+            return domain;  
         }
 
         public async Task<RealEstate> DetailAsync(Guid id)

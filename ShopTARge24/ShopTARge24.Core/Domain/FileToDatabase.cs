@@ -6,7 +6,5 @@
         public string? ImageTitle { get; set; }
         public byte[]? ImageData { get; set; }
         public Guid? RealEstateId { get; set; }
-
-        public RealEstate RealEstate { get; set; }
     }
 }

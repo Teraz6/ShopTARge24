@@ -8,7 +8,6 @@
         public int? RoomNumber { get; set; }
         public string? BuildingType { get; set; }
 
-        public List<IFormFile> Files { get; set; }
         public List<RealEstateImageViewModel> Image { get; set; }
             = new List<RealEstateImageViewModel>();
 
