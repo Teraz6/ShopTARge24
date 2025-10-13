@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shop.Data;
-using Shop.Models.Kindergarten;
+using Microsoft.EntityFrameworkCore;
+using Shop.Core.Domain;
 using Shop.Core.Dto;
 using Shop.Core.ServiceInterface;
-using Shop.ApplicationServices.Services;
-using Shop.Models.Spaceships;
-using Shop.Core.Domain;
-
+using Shop.Data;
+using Shop.Models.Kindergarten;
 
 namespace Shop.Controllers
 {
@@ -60,6 +58,14 @@ namespace Shop.Controllers
                 ChidlrenCount = vm.ChidlrenCount,
                 KindergartenName = vm.KindergartenName,
                 TeacherName = vm.TeacherName,
+                Image = vm.Image
+                    .Select(x => new FileToDatabaseDto
+                    {
+                        Id = x.Id,
+                        ImageData = x.ImageData,
+                        ImageTitle = x.ImageTitle,
+                        KindergartenId = x.KindergartenId
+                    }).ToArray()
             };
 
             var result = await _kindergartenServices.Create(dto);
@@ -92,6 +98,8 @@ namespace Shop.Controllers
             vm.TeacherName = kindergarten.TeacherName;
             vm.CreatedAt = kindergarten.CreatedAt;
             vm.UpdatedAt = kindergarten.UpdatedAt;
+            var images = await FileFromDatabase(kindergarten.Id);
+            vm.Image.AddRange(images);
 
             return View("CreateUpdate", vm);
         }
@@ -137,6 +145,8 @@ namespace Shop.Controllers
             vm.TeacherName = kindergarten.TeacherName;
             vm.CreatedAt = kindergarten.CreatedAt;
             vm.UpdatedAt = kindergarten.UpdatedAt;
+            var images = await FileFromDatabase(kindergarten.Id);
+            vm.Images.AddRange(images);
 
             return View(vm);
         }
@@ -172,8 +182,23 @@ namespace Shop.Controllers
             vm.KindergartenName = kindergarten.KindergartenName;
             vm.CreatedAt = kindergarten.CreatedAt;
             vm.UpdatedAt = kindergarten.UpdatedAt;
+            var images = await FileFromDatabase(kindergarten.Id);
+            vm.Images.AddRange(images);
 
             return View(vm);
+        }
+
+        private async Task<KindergartenImageViewModel[]> FileFromDatabase(Guid id)
+        {
+            return await _context.Set<FileToDatabase>()
+                .Where(x => x.KindergartenId == id)
+                .Select(y => new KindergartenImageViewModel
+                {
+                    Id = y.Id,
+                    ImageData = y.ImageData,
+                    ImageTitle = y.ImageTitle,
+                    Image = string.Format("data:image/gif;base64,{0}", Convert.ToBase64String(y.ImageData))
+                }).ToArrayAsync();
         }
     }
 }
