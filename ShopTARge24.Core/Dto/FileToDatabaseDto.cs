@@ -1,6 +1,6 @@
-﻿namespace ShopTARge24.Core.Domain
+﻿namespace ShopTARge24.Core.Dto
 {
-    public class KindergartenFileToDatabase
+    public class FileToDatabaseDto
     {
         public Guid Id { get; set; }
         public string? ImageTitle { get; set; }

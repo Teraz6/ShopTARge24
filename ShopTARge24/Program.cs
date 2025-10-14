@@ -1,13 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using ShopTARge24.ApplicationServices.Services;
-using ShopTARge24.Core.ServiceInterface;
 using ShopTARge24.Data;
+using Microsoft.EntityFrameworkCore;
+using ShopTARge24.Core.ServiceInterface;
+using ShopTARge24.ApplicationServices.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
 builder.Services.AddScoped<IKindergartenServices, KindergartenServices>();
 builder.Services.AddScoped<IFileServices, FileServices>();
 
@@ -25,13 +26,13 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
-app.UseStaticFiles();
 
 app.MapControllerRoute(
     name: "default",

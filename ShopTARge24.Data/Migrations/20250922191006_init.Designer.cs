@@ -12,15 +12,15 @@ using ShopTARge24.Data;
 namespace ShopTARge24.Data.Migrations
 {
     [DbContext(typeof(ShopTARge24Context))]
-    [Migration("20251009164454_KindergartenWithFiles")]
-    partial class KindergartenWithFiles
+    [Migration("20250922191006_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -54,27 +54,39 @@ namespace ShopTARge24.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Kindergartens");
+                    b.ToTable("Kindergarten");
                 });
 
-            modelBuilder.Entity("ShopTARge24.Core.Domain.KindergartenFileToDatabase", b =>
+            modelBuilder.Entity("ShopTARge24.Core.Domain.Spaceships", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<DateTime?>("BuiltDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("ImageTitle")
+                    b.Property<string>("Classification")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("KindergartenId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Crew")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EnginePower")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("KindergartenFileToDatabases");
+                    b.ToTable("Spaceships");
                 });
 #pragma warning restore 612, 618
         }
