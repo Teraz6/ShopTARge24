@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
-using ShopTARge24.Core.Dto;
+﻿using ShopTARge24.Core.Dto;
 using ShopTARge24.Core.ServiceInterface;
+using System.Text.Json;
 
 namespace ShopTARge24.ApplicationServices.Services
 {
@@ -8,16 +8,20 @@ namespace ShopTARge24.ApplicationServices.Services
     {
         public async Task<AccuLocationWeatherResultDto> AccuWeatherResult(AccuLocationWeatherResultDto dto)
         {
-            var response = $"https://api.weatherapi.com/v1/current.json";
-            
+
+
+            string apiKey = "";
+            var response = $"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={dto.CityName}";
+
             using (var client = new HttpClient())
             {
-                //Tallinn AccuWeather Locationkey = 127964
                 var httpResponse = await client.GetAsync(response);
                 string json = await httpResponse.Content.ReadAsStringAsync();
 
                 List<AccuLocationRootDto> weatherData = 
                     JsonSerializer.Deserialize<List<AccuLocationRootDto>>(json);
+
+                dto.CityName = weatherData[0].;
 
             }
 

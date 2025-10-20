@@ -6,10 +6,10 @@
         public int EpochTime { get; set; }
         public string WeatherText { get; set; } = string.Empty;
         public int WeatherIcon { get; set; }
-        public bool HasPercipitation { get; set; }
+        public bool HasPrecipitation { get; set; }
         public string PrecipitationType { get; set; } = string.Empty;
         public bool IsDayTime { get; set; }
-        public AccuTemperatureDto? Temperature { get; set; } 
+        public AccuTemperatureDto? Temperature { get; set; }
         public string MobileLink { get; set; } = string.Empty;
         public string Link { get; set; } = string.Empty;
     }
