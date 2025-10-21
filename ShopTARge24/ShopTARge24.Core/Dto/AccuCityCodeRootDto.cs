@@ -14,19 +14,19 @@
         public string LocalizedName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
         public string PrimaryPostalCode { get; set; } = string.Empty;
-        public Region? Region { get; set; }
+        public Region? Region { get; set; } 
         public Country? Country { get; set; }
         public AdministrativeArea? AdministrativeArea { get; set; }
-        public Timezone? Timezone { get; set; }
-        public Geoposition? Geoposition { get; set; }
+        public Timezone? TimeZone { get; set; }
+        public Geoposition? GeoPosition { get; set; }
         public bool IsAlias { get; set; }
-        public SupplementalAdminArea[]? SupplementalAdminArea { get; set; }
-        public string[]? DataSets { get; set; }
+        public SupplementalAdminArea[]? SupplementalAdminAreas { get; set; }
+        public string[]? DataSets { get; set; } 
     }
 
     public class Region
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public string LocalizedName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
     }
@@ -38,7 +38,7 @@
         public string EnglishName { get; set; } = string.Empty;
     }
 
-    public class  AdministrativeArea
+    public class AdministrativeArea
     {
         public string Id { get; set; } = string.Empty;
         public string LocalizedName { get; set; } = string.Empty;
@@ -46,7 +46,7 @@
         public int Level { get; set; }
         public string LocalizedType { get; set; } = string.Empty;
         public string EnglishType { get; set; } = string.Empty;
-        public string CountryId { get; set; } = string.Empty;
+        public string CountryID { get; set; } = string.Empty;
     }
 
     public class Timezone
@@ -54,7 +54,7 @@
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public int GmtOffset { get; set; }
-        public bool IsDaylightSaving {  get; set; }
+        public bool IsDaylightSaving { get; set; }
         public DateTime NextOffsetChange { get; set; }
     }
 
@@ -70,6 +70,7 @@
         public Metric? Metric { get; set; }
         public Imperial? Imperial { get; set; }
     }
+
     public class Metric
     {
         public int Value { get; set; }
@@ -90,5 +91,4 @@
         public string LocalizedName { get; set; } = string.Empty;
         public string EnglishName { get; set; } = string.Empty;
     }
-
 }
