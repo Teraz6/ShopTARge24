@@ -16,7 +16,8 @@ namespace ShopTARge24.ApplicationServices.Services
         {
 
             //https://developer.accuweather.com/core-weather/text-search?lang=shell#city-search
-            string apiKey = "";
+            //https://developer.accuweather.com/subscriptions key location
+            string apiKey = "zpka_881ddf329e554276921ea2840a0403c6_ccffbe7b";
             //var response = $"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={dto.CityName}";
             var baseUrl = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/";
 
