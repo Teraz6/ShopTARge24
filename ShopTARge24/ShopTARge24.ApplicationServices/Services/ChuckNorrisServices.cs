@@ -1,49 +1,35 @@
-﻿using Nancy.Json;
-using ShopTARge24.Core.Dto.WeatherWebClientDto;
-using ShopTARge24.Core.Dto;
-using System.Net;
-using System.Text;
+﻿using ShopTARge24.Core.Dto;
+using System.Text.Json;
+using System.Net.Http;
+using ShopTARge24.Core.ServiceInterface;
 
 namespace ShopTARge24.ApplicationServices.Services
 {
-    public class ChuckNorrisServices
+    public class ChuckNorrisServices : IChuckNorrisServices
     {
+        private readonly HttpClient _httpClient;
+
+        public ChuckNorrisServices(HttpClient httpClient)
+        {
+            _httpClient = new HttpClient();
+        }
 
         public async Task<ChuckNorrisDto> ChuckNorrisResult(ChuckNorrisDto dto)
         {
+            var response = await _httpClient.GetAsync("jokes/random");
+            response.EnsureSuccessStatusCode();
 
-            var baseUrl = "https://api.chucknorris.io/jokes/random";
+            var jsonResponse = await response.Content.ReadAsStringAsync();
 
-            using (var httpClient = new HttpClient())
+            var chuckNorrisData = JsonSerializer.Deserialize<ChuckNorrisDto>(jsonResponse, new JsonSerializerOptions
             {
-                var request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri($"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={dto.CityName}"),
-                    Content = new StringContent("", Encoding.UTF8, "application/json"),
-                };
+                PropertyNameCaseInsensitive = true,
+            });
 
-                httpClient.BaseAddress = new Uri(baseUrl);
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                //127964
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-
-            }
-
-            using (var clientChuckNorris = new HttpClient())
-            {
-                var httpResponseChuckNorris = await clientChuckNorris.GetAsync(ChuckNorrisResponse);
-                string jsonChuckNorris = await httpResponseChuckNorris.Content.ReadAsStringAsync();
-
-                ChuckNorrisDto ChuckNorrisDto =
-                    JsonSerializer.Deserialize<ChuckNorrisDto>(jsonChuckNorris);
-
-                dto.IconUrl = ChuckNorrisDto.IconUrl;
-                dto.Id = ChuckNorrisDto.Id;
-                dto.Url = ChuckNorrisDto.Url;
-                dto.Value = ChuckNorrisDto.Value;
-            }
+            dto.IconUrl = chuckNorrisData?.IconUrl;
+            dto.Id = chuckNorrisData?.Id;
+            dto.Url = chuckNorrisData?.Url;
+            dto.Value = chuckNorrisData?.Value;
 
             return dto;
         }

@@ -24,31 +24,32 @@ namespace ShopTARge24.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetNorrisFacts(ChuckNorrisViewModel model)
+        public async Task<IActionResult> GetNorrisFacts(ChuckNorrisViewModel model)
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction();
+                return RedirectToAction("ChuckNorris", new { Id = model.Id });
             }
 
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult Id(string Id)
+        public async Task<IActionResult> ChuckNorris(string Id)
         {
-            ChuckNorrisDto dto = new();
-            dto.Id = Id;
 
-            _chuckNorrisServices.ChuckNorrisResult(dto);
-            ChuckNorrisViewModel vm = new();
+            var dto = new ChuckNorrisDto { Id = Id };
+            var result = await _chuckNorrisServices.ChuckNorrisResult(dto);;
 
-            vm.IconUrl = dto.IconUrl;
-            vm.Id = dto.Id;
-            vm.Url = dto.Url;
-            vm.Value = dto.Value;
+            var viewModel = new ChuckNorrisViewModel
+            {
+                IconUrl = dto.IconUrl,
+                Id = dto.Id,
+                Url = dto.Url,
+                Value = dto.Value
+            };
 
-            return View(vm);
+            return View(viewModel);
         }
     }
 }
