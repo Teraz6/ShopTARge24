@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShopTARge24.Core.Dto;
+using ShopTARge24.ApplicationServices.Services;
+using ShopTARge24.Core.Dto.ChuckNorris;
 using ShopTARge24.Core.ServiceInterface;
 using ShopTARge24.Models.ChuckNorris;
 
@@ -24,32 +25,27 @@ namespace ShopTARge24.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetNorrisFacts(ChuckNorrisViewModel model)
+        public IActionResult SearchChuckNorrisJokes()
         {
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction("ChuckNorris", new { Id = model.Id });
-            }
-
-            return View(model);
+            return RedirectToAction(nameof(Joke));
         }
 
         [HttpGet]
-        public async Task<IActionResult> ChuckNorris(string Id)
+        public async Task<IActionResult>Joke()
         {
+            var joke = await _chuckNorrisServices.ChuckNorrisResultHttpClient();
 
-            var dto = new ChuckNorrisDto { Id = Id };
-            var result = await _chuckNorrisServices.ChuckNorrisResult(dto);;
+            ChuckNorrisViewModel vm = new();
 
-            var viewModel = new ChuckNorrisViewModel
-            {
-                IconUrl = dto.IconUrl,
-                Id = dto.Id,
-                Url = dto.Url,
-                Value = dto.Value
-            };
+            //vm.Categories = joke.Categories;
+            vm.CreatedAt = joke.CreatedAt;
+            vm.IconUrl = joke.IconUrl;
+            vm.Id = joke.Id;
+            vm.UpdatedAt = joke.UpdatedAt;
+            vm.Url = joke.Url;
+            vm.Value = joke.Value;
 
-            return View(viewModel);
+            return View(vm);
         }
     }
 }

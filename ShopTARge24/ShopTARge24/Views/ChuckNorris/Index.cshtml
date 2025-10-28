@@ -1,40 +1,14 @@
-﻿@model ShopTARge24.Models.ChuckNorris.ChuckNorrisViewModel
-
-<h1>Chuck Norris Facts</h1>
-
-<div class="container">
+﻿<div class="container">
     <form method="post">
         <div class="container">
-            <h2>Press the button for a random Chuck Norris fact</h2>
             <div class="form-group col-md-offset-3 col-md-5">
-                <button type="submit" class="btn btn-primary">Get Facts</button>
+                <h2>Welcome to Chuck Norris joke site</h2>
+            </div>
+        </div>
+        <div class="container">
+            <div class="form-group col-md-offset-3 col-md-5">
+                <button asp-controller="chuckNorris" asp-action="searchChuckNorrisJokes" class="btn btn-primary">Chuck Norris joke</button>
             </div>
         </div>
     </form>
-
-    <hr />
-
-    @if (Model != null && !string.IsNullOrEmpty(Model.Value))
-    {
-        <dl class="row text-dark">
-            <dt class="col-sm-2">Chuck Norris Image:</dt>
-            <dd class="col-sm-10">
-                <img src="@Model.IconUrl" alt="Chuck Norris" class="img-fluid" />
-            </dd>
-
-            <dt class="col-sm-2">Joke:</dt>
-            <dd class="col-sm-10">
-                @Model.Value
-            </dd>
-
-            <dt class="col-sm-2">More Info:</dt>
-            <dd class="col-sm-10">
-                <a href="@Model.Url" target="_blank">Read more</a>
-            </dd>
-        </dl>
-    }
-    else
-    {
-        <p>No fact available. Press the button to get a Chuck Norris joke!</p>
-    }
 </div>

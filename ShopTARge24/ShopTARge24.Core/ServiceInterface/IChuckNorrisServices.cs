@@ -1,9 +1,10 @@
-﻿using ShopTARge24.Core.Dto;
+﻿using ShopTARge24.Core.Dto.ChuckNorris;
 
 namespace ShopTARge24.Core.ServiceInterface
 {
     public interface IChuckNorrisServices
     {
-        Task<ChuckNorrisDto> ChuckNorrisResult(ChuckNorrisDto dto);
+        Task<ChuckNorrisRootDto> ChuckNorrisResultHttpClient();
+        Task<ChuckNorrisResultDto> ChuckNorrisResult(ChuckNorrisResultDto dto);
     }
 }

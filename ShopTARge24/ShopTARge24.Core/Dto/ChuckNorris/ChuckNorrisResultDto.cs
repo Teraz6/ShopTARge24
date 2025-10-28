@@ -1,8 +1,10 @@
-﻿namespace ShopTARge24.Models.ChuckNorris
+﻿using System.Text.Json.Serialization;
+
+namespace ShopTARge24.Core.Dto.ChuckNorris
 {
-    public class ChuckNorrisViewModel
+    public class ChuckNorrisResultDto
     {
-        public string Categories { get; set; } = string.Empty;
+        //public List<string> Categories { get; set; } = new List<string>();
         public string CreatedAt { get; set; } = string.Empty;
         public string IconUrl { get; set; } = string.Empty;
         public string Id { get; set; } = string.Empty;

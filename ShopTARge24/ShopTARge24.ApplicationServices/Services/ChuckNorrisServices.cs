@@ -1,7 +1,10 @@
-﻿using ShopTARge24.Core.Dto;
-using System.Text.Json;
-using System.Net.Http;
+﻿using Nancy.Json;
+using ShopTARge24.Core.Dto.ChuckNorris;
 using ShopTARge24.Core.ServiceInterface;
+using System.Net;
+using System.Net.Http.Json;
+using System.Text.Json;
+
 
 namespace ShopTARge24.ApplicationServices.Services
 {
@@ -11,25 +14,46 @@ namespace ShopTARge24.ApplicationServices.Services
 
         public ChuckNorrisServices(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
 
-        public async Task<ChuckNorrisDto> ChuckNorrisResult(ChuckNorrisDto dto)
+
+        public async Task<ChuckNorrisRootDto> ChuckNorrisResultHttpClient()
         {
-            var response = await _httpClient.GetAsync("jokes/random");
+            var response = await _httpClient.GetAsync("https://api.chucknorris.io/jokes/random");
+            //annab veateate, kui response ei ole edukas
             response.EnsureSuccessStatusCode();
 
-            var jsonResponse = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync();
 
-            var chuckNorrisData = JsonSerializer.Deserialize<ChuckNorrisDto>(jsonResponse, new JsonSerializerOptions
+            var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
-            });
+                //PropertyNameCaseInsensitive = true lets you ignore exact casing of JSON property names.
+                PropertyNameCaseInsensitive = true
+            };
 
-            dto.IconUrl = chuckNorrisData?.IconUrl;
-            dto.Id = chuckNorrisData?.Id;
-            dto.Url = chuckNorrisData?.Url;
-            dto.Value = chuckNorrisData?.Value;
+            var joke = JsonSerializer.Deserialize<ChuckNorrisRootDto>(json, options);
+            //The null-forgiving operator (!) is safe here since API always returns JSON.
+            return joke!;
+        }
+
+        public async Task<ChuckNorrisResultDto> ChuckNorrisResult(ChuckNorrisResultDto dto)
+        {
+            var url = "https://api.chucknorris.io/jokes/random";
+
+            using (WebClient client = new WebClient())
+            {
+                string json = client.DownloadString(url);
+                ChuckNorrisRootDto chuckNorrisResult = new JavaScriptSerializer().Deserialize<ChuckNorrisRootDto>(json);
+
+                //dto.Categories = chuckNorrisResult.Categories[0];
+                dto.CreatedAt = chuckNorrisResult.CreatedAt;
+                dto.IconUrl = chuckNorrisResult.IconUrl;
+                dto.Id = chuckNorrisResult.Id;
+                dto.UpdatedAt = chuckNorrisResult.UpdatedAt;
+                dto.Url = chuckNorrisResult.Url;
+                dto.Value = chuckNorrisResult.Value;
+            }
 
             return dto;
         }

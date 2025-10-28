@@ -1,4 +1,4 @@
-﻿namespace ShopTARge24.Core.Dto
+﻿namespace ShopTARge24.Core.Dto.AccuWeather
 {
     //public class AccuCityCodeRootDto
     //{

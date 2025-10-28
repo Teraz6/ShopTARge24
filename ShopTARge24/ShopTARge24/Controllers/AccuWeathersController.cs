@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShopTARge24.Core.Dto;
+using ShopTARge24.Core.Dto.AccuWeather;
 using ShopTARge24.Core.ServiceInterface;
 using ShopTARge24.Models.AccuWeathers;
 

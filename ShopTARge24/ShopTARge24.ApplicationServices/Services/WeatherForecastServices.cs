@@ -1,11 +1,10 @@
 ﻿using Nancy.Json;
-using ShopTARge24.Core.Dto;
+using ShopTARge24.Core.Dto.AccuWeather;
 using ShopTARge24.Core.Dto.WeatherWebClientDto;
 using ShopTARge24.Core.ServiceInterface;
 using System.Buffers.Text;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 
 namespace ShopTARge24.ApplicationServices.Services
@@ -16,28 +15,20 @@ namespace ShopTARge24.ApplicationServices.Services
         {
 
             //https://developer.accuweather.com/core-weather/text-search?lang=shell#city-search
-            //https://developer.accuweather.com/subscriptions key location
-            string apiKey = "zpka_881ddf329e554276921ea2840a0403c6_ccffbe7b";
+            string apiKey = "zpka_0c86f3fafa9147e58813fa06b647f221_9b9fd9d9";
             //var response = $"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={dto.CityName}";
             var baseUrl = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/";
 
             using (var httpClient = new HttpClient())
             {
-                var request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri($"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={dto.CityName}"),
-                    Content = new StringContent("", Encoding.UTF8, "application/json"),
-                };
-
                 httpClient.BaseAddress = new Uri(baseUrl);
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 //127964
-                var response = await httpClient.GetAsync($"{dto.CityName}?apikey={apiKey}&details=true");
+                var response = await httpClient.GetAsync($"{dto.CityCode}?apikey={apiKey}&details=true");
                 var jsonResponse = await response.Content.ReadAsStringAsync();
-                
-                var weatherData = JsonSerializer.Deserialize<List<AccuCityCodeRootDto>>(jsonResponse);
+                List<AccuCityCodeRootDto> weatherData =
+                    JsonSerializer.Deserialize<List<AccuCityCodeRootDto>>(jsonResponse);
 
                 dto.CityName = weatherData[0].LocalizedName;
                 dto.CityCode = weatherData[0].Key;

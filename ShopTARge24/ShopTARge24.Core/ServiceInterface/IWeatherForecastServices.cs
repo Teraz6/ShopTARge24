@@ -1,4 +1,4 @@
-﻿using ShopTARge24.Core.Dto;
+﻿using ShopTARge24.Core.Dto.AccuWeather;
 
 namespace ShopTARge24.Core.ServiceInterface
 {
