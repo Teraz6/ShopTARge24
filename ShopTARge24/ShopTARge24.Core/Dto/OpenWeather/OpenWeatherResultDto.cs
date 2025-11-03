@@ -13,13 +13,13 @@
         public double TempMax { get; set; }
         public int Humidity { get; set; }
         public int Pressure { get; set; }
-        public string Main { get; set; }
-        public string Description { get; set; }
-        public string Icon { get; set; }
+        public string Main { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Icon { get; set; } = string.Empty;
         public double WindSpeed { get; set; }
         public int WindDegrees { get; set; }
         public double WindGust { get; set; }
-        public double Rain1h { get; set; }
+        public double? Rain1h { get; set; }
         public int Cloudiness { get; set; }
         public int Visibility { get; set; }
         public long Sunrise { get; set; }
