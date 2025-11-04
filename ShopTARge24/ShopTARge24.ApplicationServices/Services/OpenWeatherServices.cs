@@ -15,6 +15,15 @@ namespace ShopTARge24.ApplicationServices.Services
             string apiKey = "4a92d9e88b48d6af41547036eb52d055";
 
             var city = dto.CityName?.Trim() ?? "";
+            var q = Uri.EscapeDataString($"{city}");
+            var geoUrl = $"https://api.openweathermap.org/geo/1.0/direct?q={q}&limit=1&appid={apiKey}";
+            var geoJson = await _http.GetStringAsync(geoUrl);
+            var geo = JsonConvert.DeserializeObject<List<OpenWeatherLocationDto>>(geoJson);
+
+            dto.CityName = geo[0].Name;
+            dto.Country = geo[0].Country;
+            dto.Latitude = geo[0].Latitude;
+            dto.Longitude = geo[0].Longitude;
 
             var lat = dto.Latitude.ToString(CultureInfo.InvariantCulture);
             var lon = dto.Longitude.ToString(CultureInfo.InvariantCulture);
