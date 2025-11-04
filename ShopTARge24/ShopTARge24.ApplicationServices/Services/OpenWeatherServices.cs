@@ -12,7 +12,7 @@ namespace ShopTARge24.ApplicationServices.Services
 
         public async Task<OpenWeatherResultDto> OpenWeatherResult(OpenWeatherResultDto dto)
         {
-            string apiKey = "243d54e3b87c90965272679d018e0825";
+            string apiKey = "4a92d9e88b48d6af41547036eb52d055";
 
             var city = dto.CityName?.Trim() ?? "";
             var country = string.IsNullOrWhiteSpace(dto.Country) ? "EE" : dto.Country.Trim();
