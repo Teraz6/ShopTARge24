@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using ShopTARge24.ApplicationServices.Services;
 using ShopTARge24.Core.ServiceInterface;
 using ShopTARge24.Data;
 using ShopTARge24.RealEstateTest.Macros;
-using Microsoft.EntityFrameworkCore;
+using ShopTARge24.RealEstateTest.Mock;
 
 namespace ShopTARge24.RealEstateTest
 {
@@ -23,6 +25,8 @@ namespace ShopTARge24.RealEstateTest
         {
             services.AddScoped<IRealEstateServices, RealEstateServices>();
             services.AddScoped<IFileServices, FileServices>();
+            services.AddScoped<IHostEnvironment, MockIHostEnviroment>();
+            
 
             services.AddDbContext<ShopTARge24Context>(x =>
             {
