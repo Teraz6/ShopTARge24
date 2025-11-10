@@ -27,79 +27,75 @@ namespace ShopTARge24.RealEstateTest
             Assert.NotNull(result);
         }
 
-        //TODO:
-        //ShouldNot_GetByIdRealEstate_WhenReturnsNotEqual()
-        //Should_GetByIdRealEstate_WhenReturnsEqual()
-        //Should_DeleteByIdRealEstate_WhenDeleteRealEstate()
-        //ShouldNot_DeleteByIdRealEstate_WhenDidNotDeleteRealEstate()
-
+        [Fact]
         public async Task ShouldNot_GetByIdRealEstate_WhenReturnsNotEqual()
         {
             //Arrange
-            RealEstateDto dto = new() //TODO: Search by id, not add
+            Guid wrongGuid = Guid.NewGuid();
+            Guid guid = Guid.Parse("7fbc0046-da94-4a7c-a522-a86a26c68040");
+
+            //Act
+            await Svc<IRealEstateServices>().DetailAsync(guid);
+
+            //Assert
+            Assert.NotEqual(wrongGuid, guid);
+        }
+
+        [Fact]
+        public async Task Should_GetByIdRealEstate_WhenReturnsEqual()
+        {
+            //Arrange
+            Guid databaseGuid = Guid.Parse("7fbc0046-da94-4a7c-a522-a86a26c68040");
+            Guid guid = Guid.Parse("7fbc0046-da94-4a7c-a522-a86a26c68040");
+
+            //Act
+            await Svc<IRealEstateServices>().DetailAsync(guid);
+
+            //Assert
+            Assert.Equal(databaseGuid, guid);
+        }
+
+        [Fact]
+        public async Task Should_DeleteByIdRealEstate_WhenDeleteRealEstate()
+        {
+            //Arrange
+            RealEstateDto dto = MockRealEstateDto();
+
+            //Act
+            var addRealEstate = await Svc<IRealEstateServices>().Create(dto);
+            var deleteRealEstate = await Svc<IRealEstateServices>().Delete((Guid)addRealEstate.Id);
+
+            //Assert
+            Assert.Equal(addRealEstate.Id, deleteRealEstate.Id);
+        }
+
+        [Fact]
+        public async Task ShouldNot_DeleteByIdRealEstate_WhenDidNotDeleteRealEstate()
+        {
+            //Arrange
+            RealEstateDto dto = MockRealEstateDto();
+
+            //Act
+            var realEstate1 = await Svc<IRealEstateServices>().Create(dto);
+            var realEstate2 = await Svc<IRealEstateServices>().Create(dto);
+
+            var result = await Svc<IRealEstateServices>().Delete((Guid)realEstate2.Id);
+
+            //Assert
+            Assert.NotEqual(realEstate1.Id, result.Id);
+        }
+
+        private RealEstateDto MockRealEstateDto()
+        {
+            return new RealEstateDto
             {
-                Area = 85.0,
-                Location = "Another Location",
-                RoomNumber = 2,
+                Area = 150.0,
+                Location = "Sample Location",
+                RoomNumber = 4,
                 BuildingType = "House",
                 CreatedAt = DateTime.UtcNow,
                 ModifiedAt = DateTime.UtcNow
             };
-            var createdRealEstate = await Svc<IRealEstateServices>().Create(dto);
-            //Act
-            var fetchedRealEstate = await Svc<IRealEstateServices>().GetById(createdRealEstate.Id);
-        }
-
-        public async Task Should_GetByIdRealEstate_WhenReturnsEqual()
-        {
-            //Arrange
-            RealEstateDto dto = new() //TODO: Search by id, not add
-            {
-                Area = 95.0,
-                Location = "Sample Location",
-                RoomNumber = 4,
-                BuildingType = "Condo",
-                CreatedAt = DateTime.UtcNow,
-                ModifiedAt = DateTime.UtcNow
-            };
-            var createdRealEstate = await Svc<IRealEstateServices>().Create(dto);
-            //Act
-            var fetchedRealEstate = await Svc<IRealEstateServices>().GetById(createdRealEstate.Id);
-        }
-
-        public async Task Should_DeleteByIdRealEstate_WhenDeleteRealEstate()
-        {
-            //Arrange
-            RealEstateDto dto = new() //TODO: Search by id, not add
-            {
-                Area = 110.0,
-                Location = "Delete Location",
-                RoomNumber = 3,
-                BuildingType = "Townhouse",
-                CreatedAt = DateTime.UtcNow,
-                ModifiedAt = DateTime.UtcNow
-            };
-            var createdRealEstate = await Svc<IRealEstateServices>().Create(dto);
-            //Act
-            await Svc<IRealEstateServices>().Delete(createdRealEstate.Id);
-
-        }
-
-        public async Task ShouldNot_DeleteByIdRealEstate_WhenDidNotDeleteRealEstate()
-        {
-            //Arrange
-            RealEstateDto dto = new() //TODO: Search by id, not add
-            {
-                Area = 130.0,
-                Location = "Non-Delete Location",
-                RoomNumber = 5,
-                BuildingType = "Villa",
-                CreatedAt = DateTime.UtcNow,
-                ModifiedAt = DateTime.UtcNow
-            };
-            var createdRealEstate = await Svc<IRealEstateServices>().Create(dto);
-            //Act
-            await Svc<IRealEstateServices>().Delete(createdRealEstate.Id);
         }
     }
 }
