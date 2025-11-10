@@ -85,6 +85,52 @@ namespace ShopTARge24.RealEstateTest
             Assert.NotEqual(realEstate1.Id, result.Id);
         }
 
+        [Fact]
+        public async Task Should_UpdateRealEstate_WhenUpdatedRealEstate()
+        {
+            //Arrange
+            var guid = Guid.Parse("7fbc0046-da94-4a7c-a522-a86a26c68040");
+            RealEstateDto dto = MockRealEstateDto();
+
+            RealEstateDto domain = new();
+            domain.Id = Guid.Parse("7fbc0046-da94-4a7c-a522-a86a26c68040");
+            domain.Area = 200.0;
+            domain.Location = "Updated Location";
+            domain.RoomNumber = 5;
+            domain.BuildingType = "Villa";
+            domain.CreatedAt = DateTime.UtcNow;
+            domain.ModifiedAt = DateTime.UtcNow;
+
+            //Act
+            await Svc<IRealEstateServices>().Update(dto);
+
+            //Assert
+            Assert.Equal(domain.Id, guid);
+            Assert.NotEqual(dto.Area, domain.Area);
+            Assert.DoesNotMatch(dto.Location, domain.Location);
+            Assert.DoesNotMatch(dto.RoomNumber.ToString(), domain.RoomNumber.ToString());
+        }
+
+        [Fact]
+        public async Task Should_UpdateRealEstate_WhenUpdateDataVersion2()
+        {
+            //Alguses andmed luuakse ja kasutame MockRealEstateDto meetodit
+            //Andmed uuendatakse ja kasutame uut Mock meetodit(selle peab ise tegema)
+            //lõpus kontrollime et andmed erinevad
+
+            //Arrange and Act
+            RealEstateDto dto = MockRealEstateDto();
+            var createRealEstate =  await Svc<IRealEstateServices>().Create(dto);
+
+            RealEstateDto updatedDto = MockUpdateRealEstateData();
+            var result = await Svc<IRealEstateServices>().Update(updatedDto);
+
+            //Assert
+            Assert.NotEqual(createRealEstate.Area, result.Area);
+            Assert.DoesNotMatch(createRealEstate.Location, result.Location);
+            Assert.NotEqual(createRealEstate.RoomNumber, result.RoomNumber);
+        }
+
         private RealEstateDto MockRealEstateDto()
         {
             return new RealEstateDto
@@ -96,6 +142,20 @@ namespace ShopTARge24.RealEstateTest
                 CreatedAt = DateTime.UtcNow,
                 ModifiedAt = DateTime.UtcNow
             };
+        }
+        private RealEstateDto MockUpdateRealEstateData()
+        {
+            RealEstateDto RealEstate = new()
+            {
+                Area = 100.0,
+                Location = "New Updated Location",
+                RoomNumber = 7,
+                BuildingType = "Hideout",
+                CreatedAt = DateTime.Now.AddYears(1),
+                ModifiedAt = DateTime.Now.AddYears(1)
+            };
+
+            return RealEstate;
         }
     }
 }
