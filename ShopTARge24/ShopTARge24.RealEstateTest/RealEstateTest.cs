@@ -1,4 +1,5 @@
-﻿using ShopTARge24.Core.Dto;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopTARge24.Core.Dto;
 using ShopTARge24.Core.ServiceInterface;
 using System.Threading.Tasks;
 
@@ -155,34 +156,34 @@ namespace ShopTARge24.RealEstateTest
         //Kommentaari kirjutate, mida iga test kontrollib
 
         [Fact]
-        //Kontrollib, et ei saa uuendada RealEstate kui id on vale
-        public async Task ShouldNot_UpdateRealEstate_WhenInvalidId()
+        //Kontrollib, kas RealEstate luuakse ja ID määratakse
+        public async Task Should_CreateRealEstate_AndAssignId()
         {
-            RealEstateDto dto = MockRealEstateDto();
+            // Arrange
+            var dto = MockRealEstateDto();
+            dto.Id = Guid.Empty;
 
-            RealEstateDto domain = new()
-            {
-                Id = Guid.NewGuid(),
-                Area = 185.0,
-                Location = "Another Updated Location",
-                RoomNumber = 6,
-                BuildingType = "Cottage",
-                CreatedAt = dto.CreatedAt,
-                ModifiedAt = DateTime.Now.AddYears(1)
-            };
+            // Act
+            var result = await Svc<IRealEstateServices>().Create(dto);
 
-            var result = await Svc<IRealEstateServices>().Update(domain);
-
-            Assert.Null(result);
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotEqual(Guid.Empty, result.Id);
         }
 
         [Fact]
-        //Kontrollib, et ei saa kustutada RealEstate mida pole olemas
-        public async Task ShouldNot_DeleteRealEstate_WhenIdDontExist()
+        //Kontrollib, et kustutatud RealEstate pole leitav
+        public async Task Should_ReturnNull_WhenReadingDeletedRealEstate()
         {
-            var guid = Guid.NewGuid();
+            // Arrange
+            RealEstateDto dto = MockRealEstateDto();
+            var created = await Svc<IRealEstateServices>().Create(dto);
 
-            var result = await Svc<IRealEstateServices>().Delete(guid);
+            // Act
+            await Svc<IRealEstateServices>().Delete((Guid)created.Id);
+
+            // Assert
+            var result = await Svc<IRealEstateServices>().DetailAsync((Guid)created.Id);
 
             Assert.Null(result);
         }
