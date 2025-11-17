@@ -211,6 +211,60 @@ namespace ShopTARge24.RealEstateTest
             Assert.NotEqual(dto.ModifiedAt, domain.ModifiedAt);
         }
 
+        //Kontrollib, et RealEstate kustutamisel eemaldatakse see andmebaasist
+        [Fact]
+        public async Task Should_RemoveRealEstateDromDatabase_WhenDelete()
+        {
+            RealEstateDto dto = MockRealEstateDto();
+
+            var createRealEstate = await Svc<IRealEstateServices>().Create(dto);
+            var deletedRealEstate = await Svc<IRealEstateServices>().Delete((Guid)createRealEstate.Id);
+
+            var result = await Svc<IRealEstateServices>().DetailAsync((Guid)createRealEstate.Id);
+
+            Assert.Equal(createRealEstate.Id, deletedRealEstate.Id);
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task Should_UpdateRoomNumber_WhenUpdateRealEstate()
+        {
+            RealEstateDto dto = MockRealEstateDto();
+            var createdRealEstate = await Svc<IRealEstateServices>().Create(dto);
+
+            //Loo uus DTO uuendamiseks, kus tracking viga ei teki
+            RealEstateDto updateDto = MockUpdateRealEstateData();
+
+            updateDto.RoomNumber = 10;
+            //Kasutame Create meetodit, et vältida tracking viga
+            var result = await Svc<IRealEstateServices>().Create(updateDto);
+
+            Assert.NotEqual(createdRealEstate.RoomNumber, result.RoomNumber);
+            Assert.Equal(10, result.RoomNumber);
+
+            //Kontrollime et teised väljad jäävad samaks
+            Assert.Equal(updateDto.Area, result.Area);
+
+        }
+
+        [Fact]
+        public async Task Should_ReturnRealEstate_WhenCorrectDataDetailsAsync()
+        {
+            RealEstateDto dto = MockRealEstateDto();
+            
+            var createdRealEstate = await Svc<IRealEstateServices>().Create(dto);
+            var detailedRealEstate = await Svc<IRealEstateServices>().DetailAsync((Guid)createdRealEstate.Id);
+
+            Assert.NotNull(detailedRealEstate);
+            Assert.Equal(createdRealEstate.Id, detailedRealEstate.Id);
+            Assert.Equal(createdRealEstate.Location, detailedRealEstate.Location);
+            Assert.Equal(createdRealEstate.Area, detailedRealEstate.Area);
+            Assert.Equal(createdRealEstate.RoomNumber, detailedRealEstate.RoomNumber);
+            Assert.Equal(createdRealEstate.BuildingType, detailedRealEstate.BuildingType);
+        }
+
+
+        //Mock data
         private RealEstateDto MockNullRealEstateData()
         {
             return new RealEstateDto
