@@ -59,7 +59,7 @@ namespace ShopTARge24.SpaceshipTest
 
         //TODO: Add 3 more tests
 
-        private SpaceshipDto MockSpaceshipDto()s
+        private SpaceshipDto MockSpaceshipDto()
         {
             return new SpaceshipDto
             {
