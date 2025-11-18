@@ -32,11 +32,9 @@ namespace ShopTARge24.SpaceshipTest
         [Fact]
         public async Task Should_UpdateSpaceship_WhenUpdatedSpaceship()
         {
-            // Arrange: create the spaceship in one context;
             var guid = Guid.Parse("24083139-8531-4f6f-9ab5-cb7b4e12ba6f");
             SpaceshipDto dto = MockSpaceshipDto();
 
-            // Create a **new DTO instance with the same ID**
             SpaceshipDto domain = new();
             domain.Id = Guid.Parse("24083139-8531-4f6f-9ab5-cb7b4e12ba6f");
             domain.Name = "Updated Ship";
@@ -47,11 +45,8 @@ namespace ShopTARge24.SpaceshipTest
             domain.CreatedAt = dto.CreatedAt;
             domain.ModifiedAt = DateTime.UtcNow;
            
-
-            // Act: use a **new DbContext scope** if possible
             await Svc<ISpaceshipServices>().Update(dto);
 
-            // Assert
             Assert.NotNull(domain);
             Assert.Equal(domain.Id, guid);
             Assert.NotEqual(dto.Name, domain.Name);
@@ -62,11 +57,9 @@ namespace ShopTARge24.SpaceshipTest
             Assert.NotEqual(dto.ModifiedAt, domain.ModifiedAt);
         }
 
+        //TODO: Add 3 more tests
 
-        //[Fact]
-        //public async Task 
-
-        private SpaceshipDto MockSpaceshipDto()
+        private SpaceshipDto MockSpaceshipDto()s
         {
             return new SpaceshipDto
             {
