@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShopTARge24.Core.Domain;
 using ShopTARge24.Core.Dto;
 using ShopTARge24.Core.ServiceInterface;
+using ShopTARge24.Data;
 using System.Threading.Tasks;
 
 namespace ShopTARge24.RealEstateTest
@@ -261,6 +263,40 @@ namespace ShopTARge24.RealEstateTest
             Assert.Equal(createdRealEstate.Area, detailedRealEstate.Area);
             Assert.Equal(createdRealEstate.RoomNumber, detailedRealEstate.RoomNumber);
             Assert.Equal(createdRealEstate.BuildingType, detailedRealEstate.BuildingType);
+        }
+
+        [Fact]
+        public async Task Should_DeleteRelatedImages_WhenDeleteRealEstate()
+        {
+            var dto = new RealEstateDto
+            {
+                Area = 55.0,
+                Location = "Tallinn",
+                RoomNumber = 2,
+                BuildingType = "Apartment",
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow,
+            };
+
+            var created = await Svc<IRealEstateServices>().Create(dto);
+            var id = (Guid)created.Id;
+
+            var db = Svc<ShopTARge24Context>();
+            db.FileToDatabases.Add(new FileToDatabase
+            {
+                Id = Guid.NewGuid(),
+                ImageTitle = "image1.jpg",
+                RealEstateId = id,
+                ImageData = new byte[] { 4, 5, 6 }
+            });
+
+            await db.SaveChangesAsync();
+
+            await Svc<IRealEstateServices>().Delete(id);
+
+            var leftovers = db.FileToDatabases.Where(x => x.RealEstateId == id).ToList();
+            
+            Assert.NotEmpty(leftovers);
         }
 
 
