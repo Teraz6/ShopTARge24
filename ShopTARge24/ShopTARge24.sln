@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARge24", "ShopTARge24.csproj", "{027C0A13-88BD-47DC-A503-08CBA25A2FA2}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARge24.Core", "..\ShopTARge24.Core\ShopTARge24.Core.csproj", "{4320F3B5-0415-4A92-A0F5-B091056425D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARge24.Data", "..\ShopTARge24.Data\ShopTARge24.Data.csproj", "{32AFA591-7DCA-4837-B047-EF57B5E4D97E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARge24.KindergartenTest", "..\ShopTARge24.KindergartenTest\ShopTARge24.KindergartenTest.csproj", "{6C6894B7-28DF-4F3A-9AD2-74724082A139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{32AFA591-7DCA-4837-B047-EF57B5E4D97E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32AFA591-7DCA-4837-B047-EF57B5E4D97E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32AFA591-7DCA-4837-B047-EF57B5E4D97E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C6894B7-28DF-4F3A-9AD2-74724082A139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C6894B7-28DF-4F3A-9AD2-74724082A139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C6894B7-28DF-4F3A-9AD2-74724082A139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C6894B7-28DF-4F3A-9AD2-74724082A139}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
