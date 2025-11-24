@@ -1,4 +1,6 @@
-﻿namespace ShopTARge24.Models.RealEstate
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ShopTARge24.Models.RealEstate
 {
     public class RealEstateCreateUpdateViewModel
     {
