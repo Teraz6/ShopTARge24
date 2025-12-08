@@ -3,6 +3,7 @@ using Microsoft.Extensions.FileProviders;
 using ShopTARge24.ApplicationServices.Services;
 using ShopTARge24.Core.ServiceInterface;
 using ShopTARge24.Data;
+using ShopTARge24.Hubs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddScoped<IFileServices, FileServices>();
 builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
 builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
 builder.Services.AddScoped<IEmailServices, EmailServices>();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddHttpClient<IChuckNorrisServices, ChuckNorrisServices>();
 
@@ -45,6 +48,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
+app.MapHub<UserHub>("/hubs/userCount");
+app.MapHub<DeathlyHallowsHub>("/hubs/deathlyHallows");
+app.MapHub<ChatHub>("/hubs/chat");
+app.MapHub<BasicChatHub>("/hubs/basicchat");
 
 app.Run();
