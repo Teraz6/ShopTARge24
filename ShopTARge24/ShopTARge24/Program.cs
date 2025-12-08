@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using ShopTARge24.ApplicationServices.Services;
+using ShopTARge24.Controllers;
+using ShopTARge24.Core.Domain;
 using ShopTARge24.Core.ServiceInterface;
 using ShopTARge24.Data;
 using ShopTARge24.Hubs;
@@ -21,9 +24,23 @@ builder.Services.AddSignalR();
 
 builder.Services.AddHttpClient<IChuckNorrisServices, ChuckNorrisServices>();
 
-
 builder.Services.AddDbContext<ShopTARge24Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = false;
+})
+    .AddEntityFrameworkStores<ShopTARge24Context>()
+    .AddDefaultTokenProviders();
+
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+//){
+//.AddEntityFrameworkStores<ShopTARge24Context>()
+//.AddDefaultTokenProviders()
+//.AddTokenProvider<DataProtectorToenProvider<ApplicationUser>>("CustomEmailConfirmation")
+//.AddDefaultUI();
+//};
 
 var app = builder.Build();
 
@@ -48,9 +65,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-app.MapHub<UserHub>("/hubs/userCount");
 app.MapHub<DeathlyHallowsHub>("/hubs/deathlyHallows");
-app.MapHub<ChatHub>("/hubs/chat");
-app.MapHub<BasicChatHub>("/hubs/basicchat");
-
+//app.MapHub<ChatHub>("/hubs/chat");
 app.Run();
