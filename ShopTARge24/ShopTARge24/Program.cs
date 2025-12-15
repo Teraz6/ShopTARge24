@@ -29,18 +29,12 @@ builder.Services.AddDbContext<ShopTARge24Context>(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.User.RequireUniqueEmail = false;
+    options.Password.RequiredLength = 3;
 })
     .AddEntityFrameworkStores<ShopTARge24Context>()
-    .AddDefaultTokenProviders();
-
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
-//){
-//.AddEntityFrameworkStores<ShopTARge24Context>()
-//.AddDefaultTokenProviders()
-//.AddTokenProvider<DataProtectorToenProvider<ApplicationUser>>("CustomEmailConfirmation")
+    .AddDefaultTokenProviders()
+    .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
 //.AddDefaultUI();
-//};
 
 var app = builder.Build();
 
@@ -66,5 +60,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 app.MapHub<DeathlyHallowsHub>("/hubs/deathlyHallows");
-//app.MapHub<ChatHub>("/hubs/chat");
+//app.MapHub<ChatHub>("/chatHub");
+
 app.Run();

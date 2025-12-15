@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using ShopTARge24.Core.Domain;
 using ShopTARge24.Core.Dto;
 using ShopTARge24.Core.ServiceInterface;
+using ShopTARge24.Models;
 using ShopTARge24.Models.Accounts;
+using System.Diagnostics;
 
 namespace ShopTARge24.Controllers
 {
@@ -18,7 +21,7 @@ namespace ShopTARge24.Controllers
 
         public AccountsController
             (
-                UserManager<ApplicationUser> userManager, 
+                UserManager<ApplicationUser> userManager,
                 SignInManager<ApplicationUser> signInManager,
                 IEmailServices emailServices
             )
@@ -55,16 +58,17 @@ namespace ShopTARge24.Controllers
                 {
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                    var confirmationLink = Url.Action("ConfirmEmail", "Accounts", new {userId = user.Id, token = token}, Request.Scheme);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Accounts", new { userId = user.Id, token = token }, Request.Scheme);
 
-                    EmailTokenDto newsignup = new();
+                    EmailTokenDto newsignup = new()
+                    {
+                        Token = token,
+                        Body = $"Please register your account by: <a href=?\"{confirmationLink}\">clicking here</a>",
+                        Subject = "CRUD registration",
+                        To = user.Email
+                    };
 
-                    newsignup.Token = token;
-                    newsignup.Body = $"Please register your account by: <a href=?\"{confirmationLink}\">clicking here</a>";
-                    newsignup.Subject = "CRUD registration";
-                    newsignup.To = user.Email;
-
-                    if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Administrations");
                     }
@@ -87,10 +91,97 @@ namespace ShopTARge24.Controllers
                 {
                     ModelState.AddModelError("", error.Description);
                 }
-             
+
             }
 
             return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"The User ID {userId} is invalid";
+                return View("NotFound");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            List<string> errordatas =
+                        [
+                        "Area", "Accounts", "Issue", "Success",
+                        "StatusMessage", "Registration Success",
+                        "ActedOn", $"{user.Email}", "CreatedAccountData",
+                        $"{user.Email}\n{user.City}\n[password hidden]\n[password hidden]"
+                        ];
+            ViewBag.ErrorDatas = errordatas;
+            ViewBag.ErrorTitle = "Email can't be confirmed";
+            ViewBag.ErrorMessage = $"The users email, with userId of {userId}, can't be confirmed.";
+            return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login(string? returnUrl)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null && !user.EmailConfirmed &&
+                    (await _userManager.CheckPasswordAsync(user, model.Password)))
+                {
+                    ModelState.AddModelError(string.Empty, "Email not confirmed yet");
+                    return View(model);
+                }
+
+                var result = await _signInManager.PasswordSignInAsync
+                    (model.Email, model.Password, model.RememberMe, true);
+
+                if (result.Succeeded)
+                {
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                }
+
+                if (result.IsLockedOut)
+                {
+                    return View("AccountLocked");
+                }
+                ModelState.AddModelError("", "Invalid login attempt");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
