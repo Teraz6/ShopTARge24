@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopTARge24.Core.Dto;
 using ShopTARge24.Core.ServiceInterface;
@@ -9,6 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ShopTARge24.Controllers
 {
+    [Authorize]
     public class RealEstateController : Controller
     {
         private readonly ShopTARge24Context _context;

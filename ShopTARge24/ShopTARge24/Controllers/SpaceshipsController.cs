@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopTARge24.Core.Domain;
 using ShopTARge24.Core.Dto;
@@ -9,6 +11,7 @@ using ShopTARge24.Models.Spaceships;
 
 namespace ShopTARge24.Controllers
 {
+    [Authorize]
     public class SpaceshipsController : Controller
     {
         private readonly ShopTARge24Context _context;
@@ -26,7 +29,6 @@ namespace ShopTARge24.Controllers
             _spaceshipServices = spaceshipServices;
             _fileServices = fileServices;
         }
-
 
         public IActionResult Index()
         {

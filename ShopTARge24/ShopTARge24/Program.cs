@@ -36,6 +36,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
 //.AddDefaultUI();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Accounts/Login";
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
