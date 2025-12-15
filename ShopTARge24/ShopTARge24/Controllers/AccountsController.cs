@@ -63,7 +63,7 @@ namespace ShopTARge24.Controllers
                     EmailTokenDto newsignup = new()
                     {
                         Token = token,
-                        Body = $"Please register your account by: <a href=?\"{confirmationLink}\">clicking here</a>",
+                        Body = $"Please register your account by: <a href='{confirmationLink}'>clicking here</a>",
                         Subject = "CRUD registration",
                         To = user.Email
                     };
@@ -114,18 +114,30 @@ namespace ShopTARge24.Controllers
             }
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                ViewBag.ErrorTitle = "Email Confirmed Successfully";
+                ViewBag.ErrorMessage = "Thank you for confirming your email. You can now log in.";
+                return View("ConfirmEmail");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
             List<string> errordatas =
-                        [
-                        "Area", "Accounts", "Issue", "Success",
-                        "StatusMessage", "Registration Success",
-                        "ActedOn", $"{user.Email}", "CreatedAccountData",
-                        $"{user.Email}\n{user.City}\n[password hidden]\n[password hidden]"
-                        ];
+                [
+                "Area", "Accounts", "Issue", "Failure",
+        "StatusMessage", "Email Confirmation Failed",
+        "ActedOn", $"{user.Email}", "ErrorDetails", string.Join(" | ", result.Errors.Select(e => e.Description))
+                ];
             ViewBag.ErrorDatas = errordatas;
             ViewBag.ErrorTitle = "Email can't be confirmed";
             ViewBag.ErrorMessage = $"The users email, with userId of {userId}, can't be confirmed.";
-            return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 
+            return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         [HttpGet]
