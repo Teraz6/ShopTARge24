@@ -38,7 +38,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Accounts/Login";
+    options.LoginPath = "/Accounts/Login"; //redirect to login page when not authenticated
 });
 
 var app = builder.Build();

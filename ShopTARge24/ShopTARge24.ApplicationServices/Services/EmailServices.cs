@@ -68,7 +68,7 @@ namespace ShopTARge24.ApplicationServices.Services
 
             _config.GetSection("EmailUserName").Value = "hesyes2020@gmail.com";
             _config.GetSection("EmailHost").Value = "smtp.gmail.com";
-            _config.GetSection("EmailPassword").Value = "";
+            _config.GetSection("EmailPassword").Value = "udsbvwbaffbwcycr";
 
             email.From.Add(MailboxAddress.Parse(_config.GetSection("EmailUserName").Value));
             email.To.Add(MailboxAddress.Parse(dto.To));
