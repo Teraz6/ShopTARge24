@@ -262,32 +262,44 @@ namespace ShopTARge24.Controllers
         }
 
         [HttpGet]
-        public IActionResult ResetPassword()
+        public IActionResult ResetPassword(string email, string token)
         {
-            return View();
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var viewModel = new ResetPasswordViewModel
+            {
+                Email = email,
+                Token = token
+            };
+
+            return View(viewModel);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> ResetPassword(ResetPasswordViewModel vm)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = await _userManager.FindByEmailAsync(vm.Email);
-        //        if (user == null)
-        //        {
-        //            return View("ResetPasswordConfirmation");
-        //        }
-        //        var result = await _userManager.ResetPasswordAsync(user, vm.Token, vm.NewPassword);
-        //        if (result.Succeeded)
-        //        {
-        //            return View("ResetPasswordConfirmation");
-        //        }
-        //        foreach (var error in result.Errors)
-        //        {
-        //            ModelState.AddModelError(string.Empty, error.Description);
-        //        }
-        //    }
-        //    return View(vm);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(vm.Email);
+                if (user != null)
+                {
+                    var result = await _userManager.ResetPasswordAsync(user, vm.Token, vm.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return View("ResetPasswordConfirmation");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(vm);
+                }
+                return View("ResetPasswordConfirmation");
+            }
+            return View(vm);
+        }
     }
 }
