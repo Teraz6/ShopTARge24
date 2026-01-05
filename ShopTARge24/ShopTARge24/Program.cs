@@ -46,6 +46,16 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Accounts/Login"; //redirect to login page when not authenticated
 });
 
+builder.Services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"]
+            ?? throw new InvalidOperationException("Google ClientId not found.");
+
+        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]
+            ?? throw new InvalidOperationException("Google ClientSecret not found.");
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

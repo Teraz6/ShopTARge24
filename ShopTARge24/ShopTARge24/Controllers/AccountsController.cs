@@ -9,6 +9,7 @@ using ShopTARge24.Core.ServiceInterface;
 using ShopTARge24.Models;
 using ShopTARge24.Models.Accounts;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace ShopTARge24.Controllers
 {
@@ -262,6 +263,7 @@ namespace ShopTARge24.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult ResetPassword(string email, string token)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
@@ -279,6 +281,7 @@ namespace ShopTARge24.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel vm)
         {
             if (ModelState.IsValid)
@@ -300,6 +303,72 @@ namespace ShopTARge24.Controllers
                 return View("ResetPasswordConfirmation");
             }
             return View(vm);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult ExternalLogin(string provider, string? returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Accounts", new { ReturnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl, string? remoteError)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                return View("Login");
+            }
+
+            // Get login info from the external provider (Google)
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Sign in the user with this external login provider if the user already has a login.
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (result.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            // If the user does not have an account, then ask the user to create an account.
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (email != null)
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user == null)
+                {
+                    // Create a new user if one doesn't exist
+                    user = new ApplicationUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        Name = info.Principal.FindFirstValue(ClaimTypes.Name) ?? email,
+                        EmailConfirmed = true, // Google already verified this email
+                        City = "Unknown"
+                    };
+
+                    await _userManager.CreateAsync(user);
+                }
+
+                // Link the external login to the user
+                await _userManager.AddLoginAsync(user, info);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+
+                return LocalRedirect(returnUrl);
+            }
+
+            return View("Login");
         }
     }
 }
