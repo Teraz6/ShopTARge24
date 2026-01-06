@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using ShopTARge24.ApplicationServices.Services;
 using ShopTARge24.Controllers;
@@ -55,6 +56,16 @@ builder.Services.AddAuthentication()
         googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]
             ?? throw new InvalidOperationException("Google ClientSecret not found.");
     });
+builder.Services.AddAuthentication()
+    .AddGitHub(githubOptions =>
+    {
+        githubOptions.ClientId = builder.Configuration["Authentication:GitHub:ClientId"]
+            ?? throw new InvalidOperationException("GitHub ClientId not found.");
+        githubOptions.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"]
+            ?? throw new InvalidOperationException("GitHub ClientSecret not found.");
+        githubOptions.Scope.Add("user:email");
+    });
+
 
 var app = builder.Build();
 
