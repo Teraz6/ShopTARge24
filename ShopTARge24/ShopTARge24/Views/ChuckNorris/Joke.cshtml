@@ -1,7 +1,38 @@
 ﻿@model ShopTARge24.Models.ChuckNorris.ChuckNorrisViewModel
 
+<div class="card">
+    <div class="card-header">
+        <h2>Today's Chuck Norris Joke is:</h2>
+        <h2>@Html.DisplayFor(model => model.Categories)</h2>
+    </div>
 
-<div class="container">
+    <div class="card-body">
+        <div class="form-group row p-2">
+            <div class="col align-middle">
+                <h3>
+                    @Html.DisplayFor(model => model.Value)
+                </h3>
+            </div>
+            <div class="col text-center">
+               <img src="~/multipleFileUpload/ChuckNorrisGiF.gif"/>
+               <img src="~/multipleFileUpload/ChuckNorrisGiF.gif"/>
+               <img src="~/multipleFileUpload/ChuckNorrisGiF.gif"/>
+               <img src="~/multipleFileUpload/ChuckNorrisGiF.gif"/>
+               <img src="~/multipleFileUpload/ChuckNorrisGiF.gif"/>
+               <img src="~/multipleFileUpload/ChuckNorrisGiF.gif"/>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card-footer">
+        <form method="post">
+            <button asp-controller="chuckNorris" asp-action="searchChuckNorrisJokes" class="btn btn-primary">Get a new joke</button>
+        </form>
+    </div>
+</div>
+
+@* <div class="container">
     <h2>Today's Chuck Norris Joke is:</h2>
     <h2>@Html.DisplayFor(model => model.Categories)</h2>
     <hr />
@@ -42,6 +73,5 @@
         <form method="post">
             <button asp-controller="chuckNorris" asp-action="searchChuckNorrisJokes" class="btn btn-primary">Joke</button>
         </form>
-        <button asp-controller="chuckNorris" asp-action="index" class="btn btn-primary">Index</button>
     </div>
-</div>
+</div> *@

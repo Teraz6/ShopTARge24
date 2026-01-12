@@ -1,8 +1,28 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ShopTARge24.Core.Domain.ApplicationUser> signInManager;
+@inject UserManager<ShopTARge24.Core.Domain.ApplicationUser> userManager;
+
+@{
+    var user = await userManager.GetUserAsync(User);
+}
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">
+        Welcome
+    </h1>
+    <h1 class="display-4">
+        @if (signInManager.IsSignedIn(User))
+        {
+            <span>@user?.UserName!</span>
+        }
+        else
+        {
+            <span>to ShopTARge24</span>
+        }
+    </h1>
+    <p>This page displays all the work done in programming class by Reten Klooster</p>
 </div>
